@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8'?>
+<CONFIG>
+  <PIDS>
+    <PID>1</PID>
+  </PIDS>
+  <PNAMES/>
+  <WINDOW_SIZE>3</WINDOW_SIZE>
+  <DB_USER></DB_USER>
+  <DB_PW></DB_PW>
+  <DB_HOST>../Traces.sqlite</DB_HOST>
+  <BROKER_IP>locahost</BROKER_IP>
+  <STORAGE_MODE>True</STORAGE_MODE>
+</CONFIG>
