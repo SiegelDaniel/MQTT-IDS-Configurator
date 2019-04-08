@@ -12,8 +12,9 @@ class ConfigurationFrame(wx.Frame):
 		self.BROKER_IP=""
 		self.STORAGE_MODE=""
 		self.WINDOW_SIZE=3
+		self.LOGGING_LEVEL =""
 		#PARENT FRAME AND PANEL
-		wx.Frame.__init__(self, parent,title="MQTT-IDS : Configure",size=(370,270))
+		wx.Frame.__init__(self, parent,title="MQTT-IDS : Configure",size=(370,320))
 		panel = wx.Panel(self)
 
 		#CONTENT
@@ -37,6 +38,10 @@ class ConfigurationFrame(wx.Frame):
 		self.DB_PW_TXTBOX = wx.TextCtrl(panel,pos=(5,175),size=(150,20),style = wx.TE_PROCESS_ENTER|wx.TE_PASSWORD,name="DB_PW")
 		self.DB_PW_TXTBOX.Bind(wx.EVT_TEXT_ENTER,self.value_entered)
 
+		wx.StaticText(panel, pos=(5,195), label ="Logging Level")
+		self.LOGGING_LEVEL_COMBOBOX = wx.ComboBox(panel,pos=(5,215),size=(150,20),style=wx.CB_READONLY|wx.CB_DROPDOWN,choices = ('INFO','DEBUG','WARNING','CRITICAL'))
+		self.LOGGING_LEVEL_COMBOBOX.Bind(wx.EVT_COMBOBOX,self.pick_combobox)
+
 		wx.StaticText(panel, pos=(195,35) ,label="Database host")
 		self.DB_HOST_TXTBOX = wx.TextCtrl(panel, pos=(195,55),size=(150,20),style = wx.TE_PROCESS_ENTER,name="DB_HOST")
 		self.DB_HOST_TXTBOX.Bind(wx.EVT_TEXT_ENTER,self.value_entered)
@@ -55,7 +60,8 @@ class ConfigurationFrame(wx.Frame):
 
 
 
-		self.EXPORT_BUTTON = wx.Button(panel,pos=(5,200), size=(340,20),label="Export config!")
+
+		self.EXPORT_BUTTON = wx.Button(panel,pos=(5,250), size=(340,20),label="Export config!")
 		self.EXPORT_BUTTON.Bind(wx.EVT_BUTTON,self.export)
 
 
@@ -93,6 +99,14 @@ class ConfigurationFrame(wx.Frame):
 		elif self.STORAGE_MODE_COMBOBOX.GetValue()=='Disabled':
 			self.STORAGE_MODE=False
 			print("False")
+		elif self.LOGGING_LEVEL_COMBOBOX.GetValue()=='INFO':
+			self.LOGGING_LEVEL='INFO'
+		elif self.LOGGING_LEVEL_COMBOBOX.GetValue()=='DEBUG':
+			self.LOGGING_LEVEL='DEBUG'
+		elif self.LOGGING_LEVEL_COMBOBOX.GetValue()=='WARNING':
+			self.LOGGING_LEVEL='WARNING'
+		elif self.LOGGING_LEVEL_COMBOBOX.GetValue()=='CRITICAL':
+			self.LOGGING_LEVEL='CRITICAL'
 
 	def pick_windowsize(self,event):
 		self.WINDOW_SIZE = self.WINDOW_SIZE_COMBOBOX.GetValue()
@@ -112,7 +126,7 @@ class ConfigurationFrame(wx.Frame):
 			ProcessName.text = PNAME
 
 		WINDOW_SIZE_XML = etree.SubElement(et,"WINDOW_SIZE")
-		WINDOW_SIZE_XML.text = self.WINDOW_SIZE
+		WINDOW_SIZE_XML.text = str(self.WINDOW_SIZE)
 
 		DB_USER_XML       = etree.SubElement(et,"DB_USER")
 		DB_USER_XML.text  = self.DB_USER
@@ -124,6 +138,8 @@ class ConfigurationFrame(wx.Frame):
 		BROKER_IP_XML.text= self.BROKER_IP
 		STORAGE_MODE_XML  = etree.SubElement(et,"STORAGE_MODE")
 		STORAGE_MODE_XML.text = str(self.STORAGE_MODE)
+		LOGGING_LEVEL_XML = etree.SubElement(et,"LOGGINGLEVEL")
+		LOGGING_LEVEL_XML.text = str(self.LOGGING_LEVEL)
 
 
 		with open('./configuration.xml', 'wb') as f:
